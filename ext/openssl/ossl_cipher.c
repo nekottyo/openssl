@@ -323,14 +323,13 @@ ossl_cipher_pkcs5_keyivgen(int argc, VALUE *argv, VALUE self)
     GetCipher(self, ctx);
     EVP_BytesToKey(EVP_CIPHER_CTX_cipher(ctx), digest, salt,
 		   (unsigned char *)RSTRING_PTR(vpass), RSTRING_LENINT(vpass), iter, key, iv);
-    printf("key: %s", key);
-    printf("iv: %s", iv);
+    printf("key: %x\n", &key);
+    printf("iv: %x\n", &iv);
     if (EVP_CipherInit_ex(ctx, NULL, NULL, key, iv, -1) != 1)
 	ossl_raise(eCipherError, NULL);
     OPENSSL_cleanse(key, sizeof key);
     OPENSSL_cleanse(iv, sizeof iv);
 
-	ossl_raise(eCipherError, key);
     rb_ivar_set(self, id_key_set, Qtrue);
 
     return key;
